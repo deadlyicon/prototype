@@ -180,6 +180,17 @@ new Test.Unit.Runner({
     this.assert(!Object.isUndefined([]));
     this.assert(!Object.isUndefined({}));
   },
+  
+  testObjectIsDefined: function() {
+    this.assert(!Object.isDefined(undefined));
+    this.assert( Object.isDefined(null));
+    this.assert( Object.isDefined(false));
+    this.assert( Object.isDefined(0));
+    this.assert( Object.isDefined(""));
+    this.assert( Object.isDefined(function() { }));
+    this.assert( Object.isDefined([]));
+    this.assert( Object.isDefined({}));
+  },
 
   // sanity check
   testDoesntExtendObjectPrototype: function() {

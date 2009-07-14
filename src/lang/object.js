@@ -289,6 +289,16 @@
   function isUndefined(object) {
     return typeof object === "undefined";
   }
+  
+  /**
+   *  Object.isUndefined(object) -> Boolean
+   *  - object (Object): The object to test.
+   *
+   *  Returns `true` if `typeof object` does not equal `undefined`; `false` otherwise.
+  **/
+  function isDefined(object){
+    return !Object.isUndefined(object);
+  };
 
   extend(Object, {
     extend:                extend,
@@ -306,6 +316,7 @@
     isFunction:            isFunction,
     isString:              isString,
     isNumber:              isNumber,
-    isUndefined:           isUndefined
+    isUndefined:           isUndefined,
+    isDefined:             isDefined
   });
 })();
