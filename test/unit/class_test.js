@@ -132,5 +132,25 @@ new Test.Unit.Runner({
     this.assertEqual("valueOf", new Foo().valueOf());
     this.assertEqual("toString", new Bar().toString());
     this.assertEqual("myValueOf", new Bar().valueOf());
+  },
+
+
+  testInheritingFromArray: function(){
+    var SuperArray = Class.create(Array, {
+      initialize: function() {
+        this.push.apply(this, arguments);
+      },
+      magic: function(){ return 'wiz bang!'; }
+    });
+
+    var sa = new SuperArray(1, 2, 3);
+    this.assert(sa instanceof Array);
+    this.assert(sa instanceof SuperArray);
+    this.assert(Object.isFunction(sa.magic));
+    this.assertEqual(sa.magic(), 'wiz bang!');
+
+    Array.prototype.boosh = function(){ return 'ka kow!'; };
+    this.assertIdentical([].boosh, sa.boosh);
+    this.assertEqual(sa.boosh(), 'ka kow!');
   }
 });
