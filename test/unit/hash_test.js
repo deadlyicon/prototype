@@ -145,6 +145,20 @@ new Test.Unit.Runner({
     this.assertNotIdentical(h, h.clone());
   },
   
+  testCloneWithInheritance: function(){
+    var h = $H(Fixtures.many),
+        c = h.cloneWithInheritance();
+    this.assertNotIdentical(h, c);
+    this.assertInstanceOf(Hash, c);
+    this.assertHashEqual(h, c);
+    h.set('e','E');
+    this.assertHashEqual(h, c);
+    c.set('e','eeeek!');
+    this.assertHashNotEqual(h, c);
+    h.set('e','Eeep');
+    this.assertHashNotEqual(h, c);
+  },
+  
   testToJSON: function() {
     this.assertEqual('{\"b\": [false, true], \"c\": {\"a\": \"hello!\"}}',
       $H({'b': [undefined, false, true, undefined], c: {a: 'hello!'}}).toJSON());

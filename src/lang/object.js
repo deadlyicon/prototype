@@ -28,6 +28,22 @@
       destination[property] = source[property];
     return destination;
   }
+  
+  /**
+   *  Object.extendUnlessDefined(object) -> Object
+   *  - destination (Object): The object to receive the new properties.
+   *  - source (Object): The object whose properties will be duplicated.
+   *
+   *  Copies properties from the source to the destination object only if 
+   *  destination object has that property. Returns the destination object.
+  **/
+  function extendUnlessDefined(destination, source) {
+    for (var property in source){
+      if (!(property in destination))
+        destination[property] = source[property];
+    }
+    return destination;
+  }
 
   /**
    *  Object.inspect(object) -> String
@@ -180,6 +196,27 @@
   function clone(object) {
     return extend({ }, object);
   }
+  
+  /**
+   *  Object.cloneWithInheritance(object) -> Object
+   *  - object (Object): The object to clone.
+   *
+   *  Creates a new object that extends from the the passed object.
+   *
+   *  Creates a new constructor with the given object as it's prototype and returns
+   *  a new instance of the new contructor
+   *
+   *  The object returned will be updated when the given object is modifed but 
+   *  modifications to the returned object will not effect the original object
+   *
+   *  Do note that this is a _shallow_ copy, not a _deep_ copy. Nested objects
+   *  will retain their references.
+  **/
+  function cloneWithInheritance(source){
+    var sourceClass = function(){};
+    sourceClass.prototype = source;
+    return new sourceClass();
+  };
 
   /**
    *  Object.isElement(object) -> Boolean
@@ -254,20 +291,21 @@
   }
 
   extend(Object, {
-    extend:        extend,
-    inspect:       inspect,
-    toJSON:        toJSON,
-    toQueryString: toQueryString,
-    toHTML:        toHTML,
-    keys:          keys,
-    values:        values,
-    clone:         clone,
-    isElement:     isElement,
-    isArray:       isArray,
-    isHash:        isHash,
-    isFunction:    isFunction,
-    isString:      isString,
-    isNumber:      isNumber,
-    isUndefined:   isUndefined
+    extend:                extend,
+    inspect:               inspect,
+    toJSON:                toJSON,
+    toQueryString:         toQueryString,
+    toHTML:                toHTML,
+    keys:                  keys,
+    values:                values,
+    clone:                 clone,
+    cloneWithInheritance:  cloneWithInheritance,
+    isElement:             isElement,
+    isArray:               isArray,
+    isHash:                isHash,
+    isFunction:            isFunction,
+    isString:              isString,
+    isNumber:              isNumber,
+    isUndefined:           isUndefined
   });
 })();

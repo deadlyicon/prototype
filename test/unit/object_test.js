@@ -23,6 +23,23 @@ new Test.Unit.Runner({
     this.assertHashEqual({foo: 'foo'}, clone,
       "Optimizing Object.clone perf using prototyping doesn't allow properties to be deleted.");
   },
+  
+  testObjectCloneWithInheritance: function(){
+    var object = {foo: 'foo', bar: [1, 2, 3]};
+    var clone = Object.cloneWithInheritance(object);
+    this.assertHashEqual(object, clone);
+    object.hello = 'world';
+    this.assertHashEqual(object, clone);
+    clone.word = 'up';
+    this.assertNotIdentical(object, clone);
+    this.assertHashNotEqual(object, clone);
+    object.hello = 'there';
+    this.assertIdentical(object.hello, clone.hello);
+    clone.hello = 'fellow';
+    this.assertNotIdentical(object.hello, clone.hello);
+    object.hello = 'sunshine';
+    this.assertNotIdentical(object.hello, clone.hello);
+  },
 
   testObjectInspect: function() {
     this.assertEqual('undefined', Object.inspect());

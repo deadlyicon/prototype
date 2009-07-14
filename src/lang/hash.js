@@ -199,6 +199,17 @@ var Hash = Class.create(Enumerable, (function() {
   function clone() {
     return new Hash(this);
   }
+  
+  /**
+   *  Hash#cloneWithInheritance() -> Hash
+   *
+   *  See Object.cloneWithInheritance
+  **/
+  function cloneWithInheritance(){
+    var hash = new Hash();
+    hash._object = Object.cloneWithInheritance(this._object);
+    return hash;
+  };
 
   return {
     initialize:             initialize,
@@ -216,7 +227,8 @@ var Hash = Class.create(Enumerable, (function() {
     toQueryString:          toQueryString,
     inspect:                inspect,
     toJSON:                 toJSON,
-    clone:                  clone
+    clone:                  clone,
+    cloneWithInheritance:   cloneWithInheritance
   };
 })());
 
