@@ -5,6 +5,11 @@ Prototype is a JavaScript framework that aims to ease development of dynamic
 web applications.  It offers a familiar class-style OO framework, extensive
 Ajax support, higher-order programming constructs, and easy DOM manipulation.
 
+=== Fork
+
+This is a fork of Sam Stephenson's (http://github.com/sstephenson/prototype) extended with some of the additional methods
+I used in heaps of projects.
+
 === Targeted platforms
 
 Prototype currently targets the following platforms:
