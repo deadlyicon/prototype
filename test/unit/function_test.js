@@ -89,6 +89,20 @@ new Test.Unit.Runner({
     String.prototype.capitalize = temp;
   },
 
+  testFunctionAppend: function(){
+    var jumps = 0, kicks = 0;
+    function jump(){jumps++;};
+    function kick(){kicks++;};
+
+    jump.append(kick)();
+    this.assertIdentical(1,jumps);
+    this.assertIdentical(1,kicks);
+    this.assertEqual('hiyah', function(){return 'hiyah';}.append(kick)());
+    this.assertIdentical(1,kicks);
+    this.assertEqual('chop!', jump.append(function(){return'chop!';})());
+    this.assertIdentical(2,jumps);
+  },
+
   testFunctionDefer: function() {
     window.deferred = undefined;
     var deferredFunction = function() { window.deferred = true; };

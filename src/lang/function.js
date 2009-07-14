@@ -138,6 +138,24 @@ Object.extend(Function.prototype, (function() {
   }
 
   /**
+   *  Function#append(wrapperFunction) -> Function
+   *  - appendingFunction (Function): The function to be appended onto this function.
+   *
+   *  Returns a function that executes the original function and then the given
+   *  function with the same arguments.
+   *
+   *  Note. The function returns the return value of Function1 or if not returned then 
+   *  Function2's return value is returned.
+   */
+  Function.prototype.append = function(followingMethod){
+    var __method = this;
+    return function() {
+      return __method.apply(__method, $A(arguments)) ||
+        (followingMethod || Prototype.emptyFunction).apply(followingMethod, $A(arguments));
+    };
+  };
+
+  /**
    *  Function#methodize() -> Function
    *  Wraps the function inside another function that, at call time, pushes
    *  `this` to the original function as the first argument.
