@@ -152,5 +152,22 @@ new Test.Unit.Runner({
     Array.prototype.boosh = function(){ return 'ka kow!'; };
     this.assertIdentical([].boosh, sa.boosh);
     this.assertEqual(sa.boosh(), 'ka kow!');
+  },
+  
+  testClassApply: function(){
+    var test = this, Frog = Class.create({
+      initialize: function(a,b,c) {
+        test.assertEqual('one',a);
+        test.assertEqual('two',b);
+        test.assertEqual('three',c);
+      }
+    });
+    Class.apply(Frog,['one','two','three']);
+    
+    try{
+      Class.apply();
+    }catch(e){
+      this.assert(e instanceof TypeError);
+    }
   }
 });

@@ -112,9 +112,20 @@ var Class = (function() {
 
     return this;
   }
+  
+  function apply(klass, a){
+    if (typeof a == 'undefined' || !(a instanceof Array))
+      throw new TypeError("second argument to Class.apply must be an array");
+    return eval(
+      'new klass('+
+      a.map(function(v,i){ return 'a['+i+']'; }).join(',')+
+      ')'
+    );
+  }
 
   return {
     create: create,
+    apply:  apply,
     Methods: {
       addMethods: addMethods
     }
