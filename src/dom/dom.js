@@ -106,6 +106,47 @@ if (!Node.ELEMENT_NODE) {
   if (element) global.Element.prototype = element.prototype;
 })(this);
 
+/**
+ * Element.pollFor
+ * 
+ * Polls the dom for an element by the given id. This is designed for updating
+ * elements with ids before the DOM is fully loaded.
+ *
+ * by defauly it's polling frequency slows over time and eventually stops after
+ * 10 seconds but you can customize off of this
+ *
+ * Element.pollFor('elementId', {
+ *   checkAgainIn: 1,   // optional
+ *   multiplyer: 1.2,   // optional
+ *   giveUpAfter: 2000, // optional
+ *   onAvailable: function(element){..},
+ *   onGiveup: function(){..}
+ * });
+**/
+Element.pollFor = function pollFor(id, options){
+  options = Object.extend({
+    onAvailable : Prototype.emptyFunction,
+    onGivenup   : Prototype.emptyFunction,
+    checkAgainIn: 1,
+    multiplyer  : 1.2,
+    giveUpAfter : 10000
+  },Object.clone(options));
+  
+  if (options.giveUpAfter > 0)
+    options.endTime = new Date(new Date().getTime() + options.giveUpAfter);
+  
+  (function checkForElement(){
+    var element = document.getElementById(id);
+    if (element) return options.onAvailable(element);
+    if (options.endTime && new Date() > options.endTime) 
+      return options.onGiveup(element);
+
+    options.checkAgainIn = options.checkAgainIn * options.multiplyer;
+    console.log('checking again in', options.checkAgainIn);
+    checkForElement.delay(options.checkAgainIn / 1000);
+  })();
+};
+
 Element.cache = { };
 Element.idCounter = 1;
 
