@@ -1502,6 +1502,9 @@ new Test.Unit.Runner({
         test.assert(!!element, 'element was found passed to onAvailable');
       }
     });
+    Element.pollFor('albert', function(element){
+      test.assert(!!element, 'element was found passed to handler');
+    });
     // I cannot figure out a way to test make any assertions in defered functions =\
   },
 });

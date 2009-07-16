@@ -114,16 +114,23 @@ if (!Node.ELEMENT_NODE) {
  *
  * by defauly it's polling frequency slows over time and eventually stops after
  * 10 seconds but you can customize off of this
+ * Usages:
+ *   Element.pollFor('elementId', function(element){ .. });
  *
- * Element.pollFor('elementId', {
- *   checkAgainIn: 1,   // optional
- *   multiplyer: 1.2,   // optional
- *   giveUpAfter: 2000, // optional
- *   onAvailable: function(element){..},
- *   onGiveup: function(){..}
- * });
+ *   Element.pollFor('elementId', {
+ *     checkAgainIn: 1,   // optional
+ *     multiplyer: 1.2,   // optional
+ *     giveUpAfter: 2000, // optional
+ *     onAvailable: function(element){..},
+ *     onGiveup: function(){..}
+ *   });
 **/
 Element.pollFor = function pollFor(id, options){
+  if (Object.isFunction(options)){
+    var onAvailable = options;
+    options = {onAvailable:onAvailable}
+  }
+
   options = Object.extend({
     onAvailable : Prototype.emptyFunction,
     onGivenup   : Prototype.emptyFunction,
@@ -142,7 +149,6 @@ Element.pollFor = function pollFor(id, options){
       return options.onGiveup(element);
 
     options.checkAgainIn = options.checkAgainIn * options.multiplyer;
-    console.log('checking again in', options.checkAgainIn);
     checkForElement.delay(options.checkAgainIn / 1000);
   })();
 };
