@@ -42,17 +42,21 @@ var Class = (function() {
       parent = properties.shift();
 
     function klass() {
-      this.initialize.apply(this, arguments);
+      if (this.initialize) return this.initialize.apply(this, arguments);
     }
 
-    Object.extend(klass, Class.Methods);
     klass.superclass = parent;
     klass.subclasses = [];
 
     if (parent) {
+      if (!parent.subclasses) parent.subclasses = [];
+      if (!parent.addClassMethods) Object.extend(parent, Class.Methods);
       subclass.prototype = parent.prototype;
       klass.prototype = new subclass;
       parent.subclasses.push(klass);
+      parent.addClassMethods();
+    }else{
+      Object.extend(klass, Class.Methods);
     }
 
     for (var i = 0; i < properties.length; i++)
@@ -66,15 +70,15 @@ var Class = (function() {
   }
 
   /**
-   *  Class#addMethods(methods) -> Class
-   *    - methods (Object): The methods to add to the class.
+   *  Class#addInstanceMethods(methods) -> Class
+   *    - methods (Object): The instance methods to add to the class.
    *
-   *  Adds methods to an existing class.
+   *  Adds instance methods to an existing class.
    *
-   *  `Class#addMethods` is a method available on classes that have been
-   *  defined with `Class.create`. It can be used to add new instance methods
-   *  to that class, or overwrite existing methods, after the class has been
-   *  defined.
+   *  `Class#addInstanceMethods` is a method available on classes that have been
+   *  defined or extended from with `Class.create`. It can be used to add new 
+   *  instance methods to that class, or overwrite existing methods, after the 
+   *  class has been defined.
    *
    *  New methods propagate down the inheritance chain. If the class has
    *  subclasses, those subclasses will receive the new methods &mdash; even in the
@@ -82,7 +86,7 @@ var Class = (function() {
    *  the class and of all its subclasses, even those that have already been
    *  instantiated.
   **/
-  function addMethods(source) {
+  function addInstanceMethods(source) {
     var ancestor   = this.superclass && this.superclass.prototype;
     var properties = Object.keys(source);
 
@@ -113,6 +117,65 @@ var Class = (function() {
     return this;
   }
   
+  /**
+   *  Class#addClassMethods(methods) -> Class
+   *    - methods (Object): The class methods to add to the class.
+   *
+   *  Adds class methods to an existing class.
+   *
+   *  `Class#addClassMethods` is a method available on classes that have been
+   *  defined or extended from with `Class.create`. It can be used to add new 
+   *  class methods to that class, or overwrite existing methods, after the 
+   *  class has been defined.
+   *
+   *  New methods are coppied to subclasses if the subclass simulating the native
+   *  inheritance chain. If the class has subclasses, those subclasses will 
+   *  receive the new methods &mdash; even in the context of `$super` calls.
+  **/
+  function addClassMethods(source){
+    var source = source || this,
+        destination = this,
+        refresh = this == source,
+        ancestor = this.superclass,
+        properties = Object.keys(source);
+
+    if (!Object.keys({ toString: true }).length) {
+      if (source.toString != Object.prototype.toString)
+        properties.push("toString");
+      if (source.valueOf != Object.prototype.valueOf)
+        properties.push("valueOf");
+    }
+    
+    // this needs to be changed to
+    // clone this
+    // update this
+    // update subclasses
+
+    for (var p = properties.length - 1; p >= 0; p--){
+      var property = properties[p], value = source[property];
+
+      if (!refresh && ancestor && Object.isFunction(value) && value.argumentNames().first() == "$super") {
+        var method = value;
+        value = (function(m) {
+          return function() { return ancestor[m].apply(this, arguments); };
+        })(property).wrap(method);
+
+        value.valueOf = method.valueOf.bind(method);
+        value.toString = method.toString.bind(method);
+      }
+
+      for (var s = this.subclasses.length - 1; s >= 0; s--){
+        var subclass = this.subclasses[s];
+        if (!(property in subclass) || subclass[property] === this[property])
+          subclass[property] = value;
+      };
+
+      if (!refresh) this[property] = value;
+    };
+
+    return this;
+  };
+  
   function apply(klass, a){
     if (typeof a == 'undefined' || !(a instanceof Array))
       throw new TypeError("second argument to Class.apply must be an array");
@@ -127,7 +190,11 @@ var Class = (function() {
     create: create,
     apply:  apply,
     Methods: {
-      addMethods: addMethods
+      extend:             addClassMethods,
+      include:            addInstanceMethods,
+      addClassMethods:    addClassMethods,
+      addInstanceMethods: addInstanceMethods,
+      addMethods:         addInstanceMethods  //DEPRECIATED
     }
   };
 })();

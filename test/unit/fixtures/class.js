@@ -81,3 +81,20 @@ var Ox = Class.create(Animal, Sellable, Reproduceable, {
     return '#<Ox: #{name}>'.interpolate(this);
   }
 });
+
+// extending from native class
+var SuperArray = Class.create(Array, {
+  initialize: function() {
+    this.push.apply(this, arguments);
+  },
+  magic: function(){ return 'wiz bang!'; }
+});
+
+// extending from native class
+var StringTheory = Class.create(String,{
+  initialize: function(value) {
+    value = new String(value);
+    this.valueOf = this.valueOf.bind(value); 
+    this.toString = this.toString.bind(value);
+  }
+});

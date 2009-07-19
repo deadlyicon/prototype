@@ -54,17 +54,17 @@ new Test.Unit.Runner({
     this.assertEqual("Gonzo: hello honk honk", gonzo.say("hello"));
   },
 
-  testClassAddMethods: function() {
+  testClassAddInstanceMethods: function() {
     var tom   = new Cat('Tom');
     var jerry = new Mouse('Jerry');
 
-    Animal.addMethods({
+    Animal.addInstanceMethods({
       sleep: function() {
         return this.say('ZZZ');
       }
     });
 
-    Mouse.addMethods({
+    Mouse.addInstanceMethods({
       sleep: function($super) {
         return $super() + " ... no, can't sleep! Gotta steal cheese!";
       },
@@ -80,13 +80,34 @@ new Test.Unit.Runner({
     this.assertUndefined(tom.escape);
     this.assertUndefined(new Animal().escape);
 
-    Animal.addMethods({
+    Animal.addInstanceMethods({
       sleep: function() {
         return this.say('zZzZ');
       }
     });
 
     this.assertEqual("Jerry: zZzZ ... no, can't sleep! Gotta steal cheese!", jerry.sleep());
+  },
+  
+  testClassAddClassMethods: function(){
+    function animalGather(){ return 'gathered animals'; };
+    function dogGather(){ return 'gathered dogs'; };
+    Dog.addClassMethods({gather:dogGather});
+    Animal.addClassMethods({gather:animalGather});
+    this.assertIdentical(animalGather, Animal.gather);
+    this.assertIdentical(dogGather, Dog.gather);
+    this.assertIdentical(animalGather, Ox.gather);
+    this.assertEqual('gathered animals', Ox.gather());
+    this.assertEqual('gathered dogs', Dog.gather());
+    
+    function oxGather($super){ return $super()+' and oxes'; }
+    Ox.addClassMethods({gather: oxGather});
+    
+    this.assertNotIdentical(oxGather, Ox.gather);
+    this.assertEqual('gathered animals and oxes', Ox.gather());
+    
+    LameOx = Class.create(Ox);
+    this.assertIdentical(Ox.gather, LameOx.gather);
   },
 
   testBaseClassWithMixin: function() {
@@ -135,23 +156,20 @@ new Test.Unit.Runner({
   },
 
 
-  testInheritingFromArray: function(){
-    var SuperArray = Class.create(Array, {
-      initialize: function() {
-        this.push.apply(this, arguments);
-      },
-      magic: function(){ return 'wiz bang!'; }
-    });
-
+  testInheritingFromNatives: function(){
     var sa = new SuperArray(1, 2, 3);
-    this.assert(sa instanceof Array);
-    this.assert(sa instanceof SuperArray);
+    this.assertInstanceOf(Array, sa);
+    this.assertInstanceOf(SuperArray, sa);
     this.assert(Object.isFunction(sa.magic));
     this.assertEqual(sa.magic(), 'wiz bang!');
 
     Array.prototype.boosh = function(){ return 'ka kow!'; };
     this.assertIdentical([].boosh, sa.boosh);
     this.assertEqual(sa.boosh(), 'ka kow!');
+        
+    this.assertInstanceOf(String, new StringTheory);
+    this.assertInstanceOf(StringTheory, new StringTheory);
+    this.assertEqual('unified maths', new StringTheory('unified maths'))
   },
   
   testClassApply: function(){
@@ -162,12 +180,11 @@ new Test.Unit.Runner({
         test.assertEqual('three',c);
       }
     });
-    Class.apply(Frog,['one','two','three']);
+    var counting = Class.apply(SuperArray,['one','two','three']);
+    this.assert('one',  counting[0]);
+    this.assert('two',  counting[1]);
+    this.assert('three',counting[2]);
     
-    try{
-      Class.apply();
-    }catch(e){
-      this.assert(e instanceof TypeError);
-    }
+    this.assertRaise('TypeError', function(){ Class.apply(); });
   }
 });

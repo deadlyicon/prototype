@@ -30,17 +30,6 @@ function $w(string) {
   return string ? string.split(/\s+/) : [];
 }
 
-/**
- * This allows you to subclass off of Array
- * Example:
- *   var Array2 = Class.create(Array,{
- *     initialize: function(array) {
- *       this.push.apply(this, arguments);
- *     }
- *   });
- */
-Array.subclasses = [];
-
 /** alias of: $A
  *  Array.from(iterable) -> Array
 **/
