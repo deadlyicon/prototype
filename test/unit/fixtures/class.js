@@ -55,6 +55,8 @@ var Plant = Class.create(Sellable, {
   }
 });
 
+var Fern = Class.create(Plant);
+
 // subclass with mixin
 var Dog = Class.create(Animal, Reproduceable, {
   initialize: function($super, name, weight, sex) {

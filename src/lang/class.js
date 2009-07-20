@@ -35,6 +35,7 @@ var Class = (function() {
    *
    *  To extend a class after it has been defined, use [[Class#addMethods]].
   **/
+  var allClasses = [];
   function subclass() {};
   function create() {
     var parent = null, properties = $A(arguments);
@@ -45,6 +46,7 @@ var Class = (function() {
       if (this.initialize) return this.initialize.apply(this, arguments);
     }
 
+    Object.extend(klass, Class.Methods);
     klass.superclass = parent;
     klass.subclasses = [];
 
@@ -66,6 +68,7 @@ var Class = (function() {
       klass.prototype.initialize = Prototype.emptyFunction;
 
     klass.prototype.constructor = klass;
+    allClasses.push(klass);
     return klass;
   }
 
@@ -134,9 +137,9 @@ var Class = (function() {
   **/
   function addClassMethods(source){
     var source = source || this,
-        destination = this,
-        refresh = this == source,
         ancestor = this.superclass,
+        subclasses = (this === Class.Methods) ? allClasses : this.subclasses,
+        original = Object.clone(this),
         properties = Object.keys(source);
 
     if (!Object.keys({ toString: true }).length) {
@@ -145,33 +148,38 @@ var Class = (function() {
       if (source.valueOf != Object.prototype.valueOf)
         properties.push("valueOf");
     }
-    
-    // this needs to be changed to
-    // clone this
-    // update this
-    // update subclasses
 
-    for (var p = properties.length - 1; p >= 0; p--){
-      var property = properties[p], value = source[property];
+    if (this !== source || this !== Class.Methods){
+      for (var p = 0; p < properties.length; p++){
+        var property = properties[p], value = source[property];
 
-      if (!refresh && ancestor && Object.isFunction(value) && value.argumentNames().first() == "$super") {
-        var method = value;
-        value = (function(m) {
-          return function() { return ancestor[m].apply(this, arguments); };
-        })(property).wrap(method);
+        if (ancestor && Object.isFunction(value) && value.argumentNames().first() == "$super") {
+          var method = value;
+          console.log('wrapping '+property);
+          value = (function(m) {
+            return function() { console.log('running super wrapper for',property); return ancestor[m].apply(this, arguments); };
+          })(property).wrap(method);
 
-        value.valueOf = method.valueOf.bind(method);
-        value.toString = method.toString.bind(method);
-      }
+          value.valueOf = method.valueOf.bind(method);
+          value.toString = method.toString.bind(method);
+        }
 
-      for (var s = this.subclasses.length - 1; s >= 0; s--){
-        var subclass = this.subclasses[s];
-        if (!(property in subclass) || subclass[property] === this[property])
-          subclass[property] = value;
+        this[property] = value;
       };
-
-      if (!refresh) this[property] = value;
     };
+
+    // foreach subclass
+    for (var s = 0; s < subclasses.length; s++){
+      var subclass = subclasses[s], updates = {};
+      // find updatable properties
+      for (var p = 0; p < properties.length; p++){
+        var property = properties[p], value = this[property];
+        // if the destination class's property value is idential to it superclass or undefined
+        if (!(property in subclass) || subclass[property] === original[property])
+          updates[property] = value;
+      };
+      subclass.addClassMethods(updates);
+    }
 
     return this;
   };

@@ -107,7 +107,22 @@ new Test.Unit.Runner({
     this.assertEqual('gathered animals and oxes', Ox.gather());
     
     LameOx = Class.create(Ox);
-    this.assertIdentical(Ox.gather, LameOx.gather);
+    this.assertEqual(Ox.gather(), LameOx.gather());
+
+    function anmialDisperse(){ return 'dispesed animals'; }
+    Animal.addClassMethods({disperse:anmialDisperse});
+    this.assertIdentical(Animal.disperse, LameOx.disperse);
+
+    Class.Methods.addClassMethods({omnipresent:'god like'});
+    this.assertEqual('god like', Plant.omnipresent);
+
+    Animal.addClassMethods({weight:'100lbs'});
+    Plant.addClassMethods({weight:'10lbs'});
+    Class.Methods.addClassMethods({weight:'0lbs'});
+
+    this.assertEqual('100lbs', Dog.weight);
+    this.assertEqual('10lbs', Fern.weight);
+    this.assertEqual('0lbs', StringTheory.weight);
   },
 
   testBaseClassWithMixin: function() {
