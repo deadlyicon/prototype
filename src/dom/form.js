@@ -98,6 +98,19 @@ Form.Methods = {
     })
   },
 
+
+  /**
+   *  Form#getElements(@form, name) -> [Element...]
+   *
+   *  Returns a collection of all controls within a form with the given name.
+  **/
+  getElementsByName: function(form, name){
+    var elements = form[name];
+    if (!elements) return [];
+    if (Object.isElement(elements)) return [elements];
+    return $A(elements);
+  },
+
   /**
    *  Form#getInputs(@form [, type [, name]]) -> [Element...]
    *  - type (String): A value for the `type` attribute against which to
