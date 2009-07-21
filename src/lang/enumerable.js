@@ -138,6 +138,17 @@ var Enumerable = (function() {
   }
 
   /**
+   *  Enumerable#none([iterator = Prototype.K[, context]]) -> Boolean
+   *
+   *  Determines whether all the elements are boolean-equivalent to `false`,
+   *  either directly or through computation by the provided iterator.
+  **/
+  function none(iterator, context) {
+    iterator = (iterator || Prototype.K).wrap(function($super){ return !$super.apply(this,arguments); });
+    return this.length ? !this.all(iterator, context) : true;
+  };
+
+  /**
    *  Enumerable#any([iterator = Prototype.K[, context]]) -> Boolean
    *
    *  Determines whether at least one element is boolean-equivalent to `true`,
@@ -466,6 +477,7 @@ var Enumerable = (function() {
     eachSlice:  eachSlice,
     all:        all,
     every:      all,
+    none:       none,
     any:        any,
     some:       any,
     collect:    collect,
