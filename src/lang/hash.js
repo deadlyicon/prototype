@@ -102,6 +102,27 @@ var Hash = Class.create(Enumerable, (function() {
   }
 
   /**
+   *  Hash#hasKey(key) -> boolean
+   *
+   *  Determines if the given key exists in the hash
+  **/
+  function hasKey(key){
+    return key in this._object;
+  }
+
+  /**
+   *  Hash#hasKeys(key[,key]) -> boolean
+   *
+   *  Determines if the given key(s) exists in the hash
+  **/
+  function hasKeys(keys){
+    var object = this._object;
+    return $A(arguments).all(function(key){
+      return key in object;
+    });
+  }
+
+  /**
    *  Hash#values() -> Array
    *
    *  Collect the values of a hash and returns them in an array.
@@ -220,6 +241,8 @@ var Hash = Class.create(Enumerable, (function() {
     toObject:               toObject,
     toTemplateReplacements: toObject,
     keys:                   keys,
+    hasKey:                 hasKey,
+    hasKeys:                hasKeys,
     values:                 values,
     index:                  index,
     merge:                  merge,
