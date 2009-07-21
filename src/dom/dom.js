@@ -589,9 +589,13 @@ Element.Methods = {
    *  Checks if `element` matches the given CSS selector.
   **/
   match: function(element, selector) {
-    if (Object.isString(selector))
-      selector = new Selector(selector);
-    return selector.match($(element));
+    // TEMP HACK FIX
+    // This is a bit of a wonky fix to work around a bug in Selector [see ticket]
+    // https://prototype.lighthouseapp.com/projects/8886-prototype/tickets/738-new-selector-throws-a-typeerror-when-given-certain-strings
+    selectors = (Object.isString(selector)) ?
+      selector.split(',').map(function(selector){ return new Selector(selector); })
+    : [selector];
+    return selectors.any(function(selector){return selector.match($(element)); });
   },
 
   /**
