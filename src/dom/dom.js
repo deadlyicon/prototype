@@ -683,6 +683,20 @@ Element.Methods = {
   },
 
   /**
+   *  Element#selectIncludingSelf(@element, selector...) -> [Element...]
+   *  - selector (String): A CSS selector.
+   *
+   *  Same as Element#select except returns the @element as well if it matches
+   *  the given selector. If matching the given element is always first in the
+   *  returned array.
+  **/
+  selectIncludingSelf: function selectIncludingSelf(element, selector){
+    var elements = element.select(selector);
+    if (element.match(selector)) elements.unshift(element);
+    return elements;
+  },
+
+  /**
    *  Element.adjacent(@element, selector...) -> [Element...]
    *  - selector (String): A CSS selector.
    *
