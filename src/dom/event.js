@@ -389,10 +389,12 @@
 
   /**
    *  Event.observe(element, eventName, handler) -> Element
+   *  Event.observe(element, [eventName[,eventName]], handler) -> Element
+   *  Event.observe(element, {eventName:handler[,eventName:handler]}) -> Element
    *
    *  Registers an event handler on a DOM element.
   **/
-  function observe(element, eventName, handler) {
+  var observe =  (function observe(element, eventName, handler) {
     element = $(element);
 
     var responder = _createResponder(element, eventName, handler);
@@ -420,7 +422,25 @@
     }
 
     return element;
-  }
+  }).wrap(function observe($super, element, eventName, handler) {
+    // Event.observe(element, {eventName:handler[,eventName:handler]})
+    if (!Object.isString(eventName) && Object.isUndefined(handler)){
+      $H(eventName).each(function(pair){
+        $super(element, pair[0], pair[1]);
+      });
+
+    // Event.observe(element, [eventName[,eventName]], handler)
+    }else if (Object.isArray(eventName) && Object.isFunction(handler)){
+      eventName.each(function(_eventName){
+        $super(element, _eventName, handler);
+      });
+
+    // Event.observe(element, eventName, handler)
+    }else{
+      $super(element, eventName, handler);
+    }
+    return element;
+  });
 
   /**
    *  Event.stopObserving(element[, eventName[, handler]]) -> Element
