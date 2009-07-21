@@ -41,6 +41,7 @@ var Try = {
 //= require "lang/periodical_executer"
 //= require "lang/string"
 //= require "lang/template"
+//= require "lang/view"
 //= require "lang/enumerable"
 //= require "lang/array"
 //= require "lang/hash"
