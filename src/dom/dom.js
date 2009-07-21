@@ -106,24 +106,28 @@ if (!Node.ELEMENT_NODE) {
   if (element) global.Element.prototype = element.prototype;
 })(this);
 
-/**
- * Element.pollFor
- * 
- * Polls the dom for an element by the given id. This is designed for updating
- * elements with ids before the DOM is fully loaded.
+/** section: DOM
+ * element.pollFor
  *
- * by defauly it's polling frequency slows over time and eventually stops after
- * 10 seconds but you can customize off of this
- * Usages:
- *   Element.pollFor('elementId', function(element){ .. });
+ *  pollFor(elementId, handler)
  *
- *   Element.pollFor('elementId', {
- *     checkAgainIn: 1,   // optional
- *     multiplyer: 1.2,   // optional
- *     giveUpAfter: 2000, // optional
- *     onAvailable: function(element){..},
- *     onGiveup: function(){..}
- *   });
+ *  pollFor(elementId, options)
+ *
+ *  Polls the dom for an element by the given id. This is designed for updating
+ *  elements with ids before the DOM is fully loaded.
+ *
+ *  by defauly it's polling frequency slows over time and eventually stops after
+ *  10 seconds but you can customize off of this
+ *
+ *      Element.pollFor('elementId', function(element){ .. });
+ *
+ *      Element.pollFor('elementId', {
+ *        checkAgainIn: 1,   // optional
+ *        multiplyer: 1.2,   // optional
+ *        giveUpAfter: 2000, // optional
+ *        onAvailable: function(element){..},
+ *        onGiveup: function(){..}
+ *      });
 **/
 Element.pollFor = function pollFor(id, options){
   if (Object.isFunction(options)){
