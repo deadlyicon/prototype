@@ -1,6 +1,8 @@
 /*  Prototype JavaScript framework, version <%= PROTOTYPE_VERSION %>
  *  (c) 2005-2009 Sam Stephenson
+ *
  *  Extended by Jared Grippe jared@jaredgrippe.com
+ *  http://github.com/deadlyicon/prototype
  *
  *  Prototype is freely distributable under the terms of an MIT-style license.
  *  For details, see the Prototype web site: http://www.prototypejs.org/
