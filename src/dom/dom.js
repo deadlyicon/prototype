@@ -575,6 +575,14 @@ Element.Methods = {
   },
 
   /**
+   *  Element#toHTML(@element) -> String
+   *  Converts the element into HTML
+  **/
+  toHTML: function toHTML(element){
+    return new Element('div').update(element.cloneNode(true)).innerHTML;
+  },
+
+  /**
    *  Element#match(@element, selector) -> boolean
    *  - selector (String): A CSS selector.
    *
