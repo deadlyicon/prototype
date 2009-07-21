@@ -281,6 +281,16 @@
   }
 
   /**
+   *  Object.isNodeList(object) -> Boolean
+   *  - object (Object): The object to test.
+   *
+   *  Returns `true` if `object` is of type `NodeList`; `false` otherwise.
+  **/
+  function isNodeList(object){
+    return !!(object && !(object instanceof Array) && ('length' in object) && ('length' in object) );
+  }
+
+  /**
    *  Object.isUndefined(object) -> Boolean
    *  - object (Object): The object to test.
    *
@@ -316,6 +326,7 @@
     isFunction:            isFunction,
     isString:              isString,
     isNumber:              isNumber,
+    isNodeList:            isNodeList,
     isUndefined:           isUndefined,
     isDefined:             isDefined
   });
