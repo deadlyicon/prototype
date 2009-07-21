@@ -171,7 +171,26 @@ Object.extend(Function.prototype, (function() {
     };
   }
 
-  return {
+  /**
+   *  Function#selfDestruct() -> Function
+   *  Wraps the function inside another function that only allows
+   *  the original function to be called once. All subsquent calls
+   *  return undefined
+   *
+   *  Used to define both a generic method and an instance method.
+  **/
+  function selfDestruct(){
+    var __method = this,
+        __method_has_run = false;
+
+    return function(){
+      if (__method_has_run) return;
+      __method_has_run = true;
+      return __method.apply(this,arguments);
+    };
+  };
+
+ return {
     argumentNames:       argumentNames,
     bind:                bind,
     bindAsEventListener: bindAsEventListener,
@@ -180,7 +199,8 @@ Object.extend(Function.prototype, (function() {
     defer:               defer,
     wrap:                wrap,
     append:              append,
-    methodize:           methodize
+    methodize:           methodize,
+    selfDestruct:        selfDestruct
   }
 })());
 
