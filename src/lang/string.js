@@ -427,6 +427,18 @@ Object.extend(String.prototype, (function() {
   }
 
   /**
+   *  String#toElements() -> String
+   *
+   *  Treats the string as html, fills an element with it and then
+   *  returns that elements child nodes.
+  **/
+  function toElements(){
+    var parentNode = new Element('div');
+    parentNode.innerHTML = this.toString();
+    return $A(parentNode.childNodes);
+  }
+
+  /**
    *  String#toPathname() -> Pathname
    *
    *  Converts the string to a Pathname.
@@ -469,6 +481,7 @@ Object.extend(String.prototype, (function() {
     empty:          empty,
     blank:          blank,
     interpolate:    interpolate,
+    toElements:     toElements,
     toPathname:     toPathname
   };
 })());
