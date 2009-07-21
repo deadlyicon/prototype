@@ -109,7 +109,7 @@ var Hash = Class.create(Enumerable, (function() {
   function hasKey(key){
     return key in this._object;
   }
-
+  
   /**
    *  Hash#hasKeys(key[,key]) -> boolean
    *
@@ -220,7 +220,7 @@ var Hash = Class.create(Enumerable, (function() {
   function clone() {
     return new Hash(this);
   }
-  
+
   /**
    *  Hash#cloneWithInheritance() -> Hash
    *
@@ -230,7 +230,7 @@ var Hash = Class.create(Enumerable, (function() {
     var hash = new Hash();
     hash._object = Object.cloneWithInheritance(this._object);
     return hash;
-  };
+  }
 
   /**
    *  Hash#without(key[,key]) -> Hash
