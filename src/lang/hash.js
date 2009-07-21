@@ -256,6 +256,21 @@ var Hash = Class.create(Enumerable, (function() {
     }, this);
   }
 
+  /**
+   *  Hash#compact() -> this
+   *
+   *  destructive
+   *
+   *  Deletes any keys whos value == null
+  **/
+  function compact(){
+    var compact = this.clone();
+    compact.each(function(pair){
+      if (pair.value == null) compact.unset(pair.key);
+    });
+    return compact;
+  }
+
   return {
     initialize:             initialize,
     _each:                  _each,
@@ -277,7 +292,8 @@ var Hash = Class.create(Enumerable, (function() {
     clone:                  clone,
     cloneWithInheritance:   cloneWithInheritance,
     without:                without,
-    only:                   only
+    only:                   only,
+    compact:                compact
   };
 })());
 
