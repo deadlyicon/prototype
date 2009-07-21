@@ -206,6 +206,64 @@ Element.Methods = {
   },
 
   /**
+   *  Element#hideViaPosition(@element) -> Element
+   *
+   *  Positions the element far outside of the viewport rather then using display:none
+   *
+   *  Used to hide elements like flash without destroying there state
+  **/
+  hideViaPosition: function(element){
+    // store if not already stored
+    element.retrieve('_originalPosition', element.getPositionalStyles());
+    element.setStyle({
+      position: 'fixed',
+      top: '-100000px',
+      left: '-100000px',
+      bottom: '',
+      right: ''
+    });
+    return element;
+  },
+
+  /**
+   *  Element#unHideViaPosition(@element) -> Element
+   *
+   *  Restores elements original positionin styling
+  **/
+  unHideViaPosition: function(element){
+    element.setStyle(element.retrieve('_originalPosition'));
+    element.originalStyles = null;
+    return element;
+  },
+
+  /**
+   *  Element#hidesViaPosition(@element) -> Element
+   *
+   *  Ensures this element uses `hideViaPosition` and `unHideViaPosition` when
+   *  `show` and `hide` are called
+  **/
+  hidesViaPosition: function(element){
+    element.hide = element.hideViaPosition;
+    element.show = element.unHideViaPosition;
+    return element;
+  },
+
+  /**
+   *  Element#show(@element) -> Element
+   *
+   *  Removes `display: none` on `element`. Returns `element`.
+  **/
+  getPositionalStyles:function(element){
+    return {
+      position: element.style.position,
+      top: element.style.top,
+      left: element.style.left,
+      bottom: element.style.bottom,
+      right: element.style.bottom
+    };
+  },
+
+  /**
    *  Element#remove(@element) -> Element
    *
    *  Completely removes `element` from the document and returns it.
