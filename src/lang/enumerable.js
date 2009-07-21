@@ -252,6 +252,18 @@ var Enumerable = (function() {
   }
 
   /**
+   *  Enumerable#includeAll(object[, object[, object]]) -> Boolean
+   *
+   *  Determines whether all the given objects are in the Enumerable or not,
+   *  uses the `include` method.
+  **/
+  function includeAll(object) {
+    return $A(arguments).all(function(value){
+      return this.include(value);
+    },this);
+  }
+
+  /**
    *  Enumerable#inGroupsOf(size[, filler = null]) -> [group...]
    *
    *  Groups items in fixed-size chunks, using a specific value to fill up
@@ -489,6 +501,7 @@ var Enumerable = (function() {
     grep:       grep,
     include:    include,
     member:     include,
+    includeAll: includeAll,
     inGroupsOf: inGroupsOf,
     inject:     inject,
     invoke:     invoke,
