@@ -190,6 +190,28 @@ Object.extend(Function.prototype, (function() {
     };
   };
 
+  /**
+   *  Function#ensureExecutionIn(milliseconds) -> Function
+   *  Wraps the function inside another function that ensures the
+   *  original function is called if nothing else calls it within
+   *  the given millseconds
+   *
+   *  Used to define a callback handler that is gauranteed to be called eventually
+  **/
+  function ensureExecutionIn(seconds){
+    var __method = this.selfDestruct();
+
+    var __methodTimeout = function(){
+      return __method.apply(this,arguments);
+    }.delay(seconds);
+
+    return function(){
+      window.clearTimeout(__methodTimeout);
+      return __method.apply(this,arguments);
+    };
+  };
+
+
  return {
     argumentNames:       argumentNames,
     bind:                bind,
@@ -200,7 +222,8 @@ Object.extend(Function.prototype, (function() {
     wrap:                wrap,
     append:              append,
     methodize:           methodize,
-    selfDestruct:        selfDestruct
+    selfDestruct:        selfDestruct,
+    ensureExecutionIn:   ensureExecutionIn
   }
 })());
 
