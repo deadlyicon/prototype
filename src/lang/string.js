@@ -426,6 +426,15 @@ Object.extend(String.prototype, (function() {
     return new Template(this, pattern).evaluate(object);
   }
 
+  /**
+   *  String#toPathname() -> Pathname
+   *
+   *  Converts the string to a Pathname.
+  **/
+  function toPathname(){
+    return new Pathname(this);
+  }
+
   return {
     gsub:           gsub,
     sub:            sub,
@@ -459,7 +468,8 @@ Object.extend(String.prototype, (function() {
     endsWith:       endsWith,
     empty:          empty,
     blank:          blank,
-    interpolate:    interpolate
+    interpolate:    interpolate,
+    toPathname:     toPathname
   };
 })());
 

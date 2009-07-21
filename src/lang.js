@@ -46,3 +46,4 @@ var Try = {
 //= require "lang/hash"
 //= require "lang/number"
 //= require "lang/range"
+//= require "lang/pathname"
