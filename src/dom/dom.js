@@ -959,6 +959,17 @@ Element.Methods = {
           (Object.isUndefined(elementStyle.styleFloat) ? 'cssFloat' : 'styleFloat') :
             property] = styles[property];
 
+    return element.redraw();
+  },
+
+  /**
+   *
+  **/
+  redraw: function(element){
+    if (Prototype.Browser.IE){
+      element.style.zoom = '';
+      element.style.zoom = '1';
+    }
     return element;
   },
 
