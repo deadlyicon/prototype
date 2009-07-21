@@ -70,3 +70,4 @@ var returning = function returning(returnValue, block, context){
 //= require "lang/number"
 //= require "lang/range"
 //= require "lang/pathname"
+//= require "lang/observable"
