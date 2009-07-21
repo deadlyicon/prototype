@@ -232,6 +232,18 @@ var Hash = Class.create(Enumerable, (function() {
     return hash;
   };
 
+  /**
+   *  Hash#without(key[,key]) -> Hash
+   *
+   *  Returns a clone of the current hash without the given keys.
+  **/
+  function without(key){
+    return $A(arguments).inject(this.clone(), function(without, key){
+      without.unset(key);
+      return without;
+    });
+  }
+
   return {
     initialize:             initialize,
     _each:                  _each,
@@ -251,7 +263,8 @@ var Hash = Class.create(Enumerable, (function() {
     inspect:                inspect,
     toJSON:                 toJSON,
     clone:                  clone,
-    cloneWithInheritance:   cloneWithInheritance
+    cloneWithInheritance:   cloneWithInheritance,
+    without:                without
   };
 })());
 
