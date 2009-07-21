@@ -126,7 +126,7 @@ if (!Node.ELEMENT_NODE) {
  *        multiplyer: 1.2,   // optional
  *        giveUpAfter: 2000, // optional
  *        onAvailable: function(element){..},
- *        onGiveup: function(){..}
+ *        onGivenup: function(){..}
  *      });
 **/
 Element.pollFor = function pollFor(id, options){
@@ -149,8 +149,8 @@ Element.pollFor = function pollFor(id, options){
   (function checkForElement(){
     var element = document.getElementById(id);
     if (element) return options.onAvailable(element);
-    if (options.endTime && new Date() > options.endTime) 
-      return options.onGiveup(element);
+    if (options.endTime && new Date() > options.endTime)
+      return options.onGivenup(element);
 
     options.checkAgainIn = options.checkAgainIn * options.multiplyer;
     checkForElement.delay(options.checkAgainIn / 1000);

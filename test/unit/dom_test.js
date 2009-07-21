@@ -1492,21 +1492,7 @@ new Test.Unit.Runner({
     this.assert(deepClone.firstChild);
     this.assertEqual('SPAN', deepClone.firstChild.nodeName.toUpperCase());
     this.assert(!deepClone.down('span')._prototypeUID);
-  },
-  
-  testElementPollFor: function(){
-    var test = this;
-    document.body.appendChild(new Element('div',{id:'albert'}));
-    Element.pollFor('albert',{
-      onAvailable: function(element){
-        test.assert(!!element, 'element was found passed to onAvailable');
-      }
-    });
-    Element.pollFor('albert', function(element){
-      test.assert(!!element, 'element was found passed to handler');
-    });
-    // I cannot figure out a way to test make any assertions in defered functions =\
-  },
+  }
 });
 
 function preservingBrowserDimensions(callback) {
