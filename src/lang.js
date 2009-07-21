@@ -33,6 +33,28 @@ var Try = {
   }
 };
 
+/**
+ *  returning(object, function) -> Object
+ *  - object (Object): The object to be returned.
+ *  - function (Function): the block to be exectued.
+ *  - object (Object): The object to be returned.
+ *
+ *  Always returns the object no matter what the return value of the block is.
+ *  The object is passed as the first and only argument to the block.
+ *
+ *     function handler(response){
+ *       returning(response,function(response){
+ *         ...
+ *       },this);
+ *     }
+ *
+ *
+ **/
+var returning = function returning(returnValue, block, context){
+ block.bind(context || returnValue)(returnValue);
+ return returnValue;
+};
+
 //= require "lang/class"
 //= require "lang/object"
 //= require "lang/function"
