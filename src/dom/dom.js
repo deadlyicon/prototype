@@ -132,7 +132,7 @@ if (!Node.ELEMENT_NODE) {
 Element.pollFor = function pollFor(id, options){
   if (Object.isFunction(options)){
     var onAvailable = options;
-    options = {onAvailable:onAvailable}
+    options = {onAvailable:onAvailable};
   }
 
   options = Object.extend({
@@ -352,7 +352,7 @@ Element.Methods = {
           }
           Element._getContentFromAnonymousElement(tagName, content.stripScripts())
             .each(function(node) {
-              element.appendChild(node)
+              element.appendChild(node);
             });
         }
         else {
@@ -718,7 +718,7 @@ Element.Methods = {
     element = $(element);
     var id = Element.readAttribute(element, 'id');
     if (id) return id;
-    do { id = 'anonymous_element_' + Element.idCounter++ } while ($(id));
+    do { id = 'anonymous_element_' + Element.idCounter++; } while ($(id));
     Element.writeAttribute(element, 'id', id);
     return id;
   },
@@ -859,7 +859,7 @@ Element.Methods = {
     var node = element.firstChild;
     while (node) {
       var nextNode = node.nextSibling;
-      if (node.nodeType == 3 && !/\S/.test(node.nodeValue))
+      if (node.nodeType == 3 && !(/\S/).test(node.nodeValue))
         element.removeChild(node);
       node = nextNode;
     }
@@ -881,7 +881,7 @@ Element.Methods = {
    *  Checks if `element` is a descendant of `ancestor`.
   **/
   descendantOf: function(element, ancestor) {
-    element = $(element), ancestor = $(ancestor);
+    element = $(element); ancestor = $(ancestor);
 
     if (element.compareDocumentPosition)
       return (element.compareDocumentPosition(ancestor) & 8) === 8;
@@ -961,7 +961,7 @@ Element.Methods = {
 
     return element.redraw();
   },
-
+  
   /**
    *
   **/
@@ -1374,8 +1374,8 @@ else if (Prototype.Browser.IE) {
     function(proceed, element) {
       element = $(element);
       // IE throws an error if element is not in document
-      try { element.offsetParent }
-      catch(e) { return $(document.body) }
+      try { element.offsetParent; }
+      catch(e) { return $(document.body); }
       var position = element.getStyle('position');
       if (position !== 'static') return proceed(element);
       element.setStyle({ position: 'relative' });
@@ -1389,8 +1389,8 @@ else if (Prototype.Browser.IE) {
     Element.Methods[method] = Element.Methods[method].wrap(
       function(proceed, element) {
         element = $(element);
-        try { element.offsetParent }
-        catch(e) { return Element._returnOffset(0,0) }
+        try { element.offsetParent; }
+        catch(e) { return Element._returnOffset(0,0); }
         var position = element.getStyle('position');
         if (position !== 'static') return proceed(element);
         // Trigger hasLayout on the offset parent so that IE6 reports
@@ -1408,8 +1408,8 @@ else if (Prototype.Browser.IE) {
 
   Element.Methods.cumulativeOffset = Element.Methods.cumulativeOffset.wrap(
     function(proceed, element) {
-      try { element.offsetParent }
-      catch(e) { return Element._returnOffset(0,0) }
+      try { element.offsetParent; }
+      catch(e) { return Element._returnOffset(0,0); }
       return proceed(element);
     }
   );
@@ -1520,7 +1520,7 @@ else if (Prototype.Browser.IE) {
                 attribute = attribute.split('{')[1];
                 attribute = attribute.split('}')[0];
                 return attribute.strip();
-              }
+              };
             }
             // IE8
             else if (value === '') {
@@ -1529,7 +1529,7 @@ else if (Prototype.Browser.IE) {
                 attribute = element.getAttribute(attribute);
                 if (!attribute) return null;
                 return attribute.strip();
-              }
+              };
             }
             el = null;
             return f;
@@ -1545,7 +1545,7 @@ else if (Prototype.Browser.IE) {
           }
         }
       }
-    }
+    };
   })();
 
   Element._attributeTranslations.write = {
@@ -1620,13 +1620,13 @@ else if (Prototype.Browser.IE) {
         if (arguments.length == 1) return element.firstDescendant();
         return Object.isNumber(expression) ? _descendants(element)[expression] :
           Element.select(element, expression)[index || 0];
-      }
+      };
     })();
   }
 
 }
 
-else if (Prototype.Browser.Gecko && /rv:1\.8\.0/.test(navigator.userAgent)) {
+else if (Prototype.Browser.Gecko && (/rv:1\.8\.0/).test(navigator.userAgent)) {
   Element.Methods.setOpacity = function(element, value) {
     element = $(element);
     element.style.opacity = (value == 1) ? 0.999999 :
@@ -1689,9 +1689,9 @@ if ('outerHTML' in document.documentElement) {
       var fragments = Element._getContentFromAnonymousElement(tagName, content.stripScripts());
       parent.removeChild(element);
       if (nextSibling)
-        fragments.each(function(node) { parent.insertBefore(node, nextSibling) });
+        fragments.each(function(node) { parent.insertBefore(node, nextSibling); });
       else
-        fragments.each(function(node) { parent.appendChild(node) });
+        fragments.each(function(node) { parent.appendChild(node); });
     }
     else element.outerHTML = content.stripScripts();
 
@@ -1711,7 +1711,7 @@ Element._getContentFromAnonymousElement = function(tagName, html) {
   var div = new Element('div'), t = Element._insertionTranslations.tags[tagName];
   if (t) {
     div.innerHTML = t[0] + html + t[1];
-    t[2].times(function() { div = div.firstChild });
+    t[2].times(function() { div = div.firstChild; });
   } else div.innerHTML = html;
   return $A(div.childNodes);
 };
@@ -1769,7 +1769,7 @@ Object.extend(Element, Element.Methods);
 
   div = null;
 
-})(document.createElement('div'))
+})(document.createElement('div'));
 
 /**
  *  Element.extend(element) -> Element
@@ -1825,7 +1825,7 @@ Element.extend = (function() {
           }
         }
         return element;
-      }
+      };
     }
     return Prototype.K;
   }
@@ -2025,7 +2025,7 @@ document.viewport = {
 
     property[D] = 'client' + D;
 
-    viewport['get' + D] = function() { return element[property[D]] };
+    viewport['get' + D] = function() { return element[property[D]]; };
     return viewport['get' + D]();
   }
 

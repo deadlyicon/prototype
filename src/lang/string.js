@@ -33,7 +33,7 @@ Object.extend(String.prototype, (function() {
   function prepareReplacement(replacement) {
     if (Object.isFunction(replacement)) return replacement;
     var template = new Template(replacement);
-    return function(match) { return template.evaluate(match) };
+    return function(match) { return template.evaluate(match); };
   }
 
   /**
@@ -61,7 +61,7 @@ Object.extend(String.prototype, (function() {
         result += String.interpret(replacement(match));
         source  = source.slice(match.index + match[0].length);
       } else {
-        result += source, source = '';
+        result += source; source = '';
       }
     }
     return result;
@@ -161,7 +161,7 @@ Object.extend(String.prototype, (function() {
    *  Returns an array containing the value returned by each script.
   **/
   function evalScripts() {
-    return this.extractScripts().map(function(script) { return eval(script) });
+    return this.extractScripts().map(function(script) { return eval(script); });
   }
 
   /**
@@ -184,7 +184,7 @@ Object.extend(String.prototype, (function() {
     var div = document.createElement('div');
     div.innerHTML = this.stripTags();
     return div.childNodes[0] ? (div.childNodes.length > 1 ?
-      $A(div.childNodes).inject('', function(memo, node) { return memo+node.nodeValue }) :
+      $A(div.childNodes).inject('', function(memo, node) { return memo+node.nodeValue; }) :
       div.childNodes[0].nodeValue) : '';
   }
 
@@ -413,7 +413,7 @@ Object.extend(String.prototype, (function() {
    *  only whitespace.
   **/
   function blank() {
-    return /^\s*$/.test(this);
+    return (/^\s*$/).test(this);
   }
 
   /**
