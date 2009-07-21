@@ -244,6 +244,18 @@ var Hash = Class.create(Enumerable, (function() {
     });
   }
 
+  /**
+   *  Hash#only(key[,key]) -> Hash
+   *
+   *  Returns a clone of the current hash with only the given keys.
+  **/
+  function only(keys){
+    return $A(arguments).inject(new Hash, function(only, key){
+      only.set(key, this.get(key));
+      return only;
+    }, this);
+  }
+
   return {
     initialize:             initialize,
     _each:                  _each,
@@ -264,7 +276,8 @@ var Hash = Class.create(Enumerable, (function() {
     toJSON:                 toJSON,
     clone:                  clone,
     cloneWithInheritance:   cloneWithInheritance,
-    without:                without
+    without:                without,
+    only:                   only
   };
 })());
 
