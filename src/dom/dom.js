@@ -106,56 +106,81 @@ if (!Node.ELEMENT_NODE) {
   if (element) global.Element.prototype = element.prototype;
 })(this);
 
-/** section: DOM
- * element.pollFor
- *
- *  pollFor(elementId, handler)
- *
- *  pollFor(elementId, options)
- *
- *  Polls the dom for an element by the given id. This is designed for updating
- *  elements with ids before the DOM is fully loaded.
- *
- *  by defauly it's polling frequency slows over time and eventually stops after
- *  10 seconds but you can customize off of this
- *
- *      Element.pollFor('elementId', function(element){ .. });
- *
- *      Element.pollFor('elementId', {
- *        checkAgainIn: 1,   // optional
- *        multiplyer: 1.2,   // optional
- *        giveUpAfter: 2000, // optional
- *        onAvailable: function(element){..},
- *        onGivenup: function(){..}
- *      });
-**/
-Element.pollFor = function pollFor(id, options){
-  if (Object.isFunction(options)){
-    var onAvailable = options;
-    options = {onAvailable:onAvailable};
+Element.pollFor = (function() {
+  
+  /** section: DOM
+   * Element.pollFor
+   *
+   *  pollFor(elementId, handler)
+   *   - selectors (string or array): The element(s) to poll for
+   *   - handler or options (function or object): the onAvailable handler or a options object
+   *
+   *  Polls the dom for element(s) and executes the handler given well before the DOM is ready.
+   *
+   *  by defauly it's polling frequency slows over time and eventually stops after
+   *  10 seconds but you can customize off of this
+   *
+   *      // poll for the header and the header img
+   *      Element.pollFor(['#header','#header img'], function(element1, element2){ .. });
+   *
+   *      Element.pollFor('.', {
+   *        onAvailable: function(element){..},
+   *        onGiveup: function(){..}
+   *      });
+  **/
+  function pollFor(selectors, handlers){
+    if (!Object.isArray(selectors)) selectors = [selectors];
+    if (Object.isFunction(handlers)) handlers = {onAvailable: handlers};
+
+    pollFor.waiters.push({
+      selectors:   selectors, 
+      onAvailable: handlers.onAvailable || Prototype.emptyFunction,
+      onGiveup:   handlers.onGiveup || Prototype.emptyFunction
+    });
+
+    startPolling();
+  };
+
+  Object.extend(pollFor,{
+    running:  false,
+    waiters:  [],
+    INTERVAL: 40,
+    TRYS:     0,
+    MAX_TRYS: 1000
+  });
+
+  function startPolling(){
+    if (pollFor.running) return;
+    pollFor.running = true;
+    poll();
   }
 
-  options = Object.extend({
-    onAvailable : Prototype.emptyFunction,
-    onGivenup   : Prototype.emptyFunction,
-    checkAgainIn: 1,
-    multiplyer  : 1.2,
-    giveUpAfter : 10000
-  },Object.clone(options));
-  
-  if (options.giveUpAfter > 0)
-    options.endTime = new Date(new Date().getTime() + options.giveUpAfter);
-  
-  (function checkForElement(){
-    var element = document.getElementById(id);
-    if (element) return options.onAvailable(element);
-    if (options.endTime && new Date() > options.endTime)
-      return options.onGivenup(element);
+  function poll(){
+    if (!pollFor.running || !pollFor.waiters.length) return;
+    if (document.loaded) pollFor.TRYS++;
+    if (pollFor.TRYS >= pollFor.MAX_TRYS){
+      var waiter;
+      while(waiter = pollFor.waiters.shift()){
+        waiter.onGiveup.defer();
+      }
+      pollFor.TRYS = 0;
+      pollFor.running = false;
+      return;
+    }
+    
+    pollFor.waiters.clone().each(function(waiter){
+      var elements = waiter.selectors.map($$);
+      if (!elements.pluck('length').all()) return;
+      (function(){ waiter.onAvailable.apply(null,elements); }).defer();
+      pollFor.waiters = pollFor.waiters.without(waiter);
+    });
 
-    options.checkAgainIn = options.checkAgainIn * options.multiplyer;
-    checkForElement.delay(options.checkAgainIn / 1000);
-  })();
-};
+    poll.delay(pollFor.INTERVAL / 1000);
+  }
+  
+  return pollFor;
+  
+})();
 
 Element.cache = { };
 Element.idCounter = 1;
