@@ -182,8 +182,15 @@ var Class = (function() {
     }
 
     return this;
-  };
-  
+  }
+
+  function curry(){
+    if (!arguments.length) return this;
+    return Class.create(this, {
+      initialize: Function.prototype.curry.apply(this.prototype,arguments)
+    });
+  }
+
   function apply(klass, a){
     if (typeof a == 'undefined' || !(a instanceof Array))
       throw new TypeError("second argument to Class.apply must be an array");
@@ -198,6 +205,7 @@ var Class = (function() {
     create: create,
     apply:  apply,
     Methods: {
+      curry:              curry,
       extend:             addClassMethods,
       include:            addInstanceMethods,
       addClassMethods:    addClassMethods,
