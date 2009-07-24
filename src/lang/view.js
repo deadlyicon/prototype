@@ -18,30 +18,31 @@ var View = Class.create({
    *
    *  Creates a View object.
   **/
-  initialize: function(source){
+  initialize: function(source, tag){
+    if (tag) this.tag = tag;
+    var t = RegExp.escape(this.tag);
     this.evaluate = new Function("obj",
       "var p=[],print=function(){p.push.apply(p,arguments);};" +
-
       // Introduce the data as local variables using with(){}
       "with(obj){p.push('" +
-
       // Convert the template into pure JavaScript
       source.toString()
         .replace(/[\r\t\n]/g, " ")
-        .replace(/'(?=[^#]*#>)/g,"\t")
+        .replace(new RegExp("'(?=[^"+t+"]*"+t+">)",'g'),"\t")
         .split("'").join("\\'")
         .split("\t").join("'")
-        .replace(/<#=(.+?)#>/g, "',$1,'")
-        .split(this.tag[0]).join("');")
-        .split(this.tag[1]).join("p.push('")
-      + "');}return p.join('');");
+        .replace(new RegExp('<'+t+'=(.+?)'+t+'>','g'), "',$1,'")
+        .split('<'+t).join("');")
+        .split(t+'>').join("p.push('")
+      + "');}return p.join('');"
+    );
   },
   /**
    *  View#tag
    *  
-   *  an array of the lest and right sides of the tag used in the view
+   *  the symbol used as the tag delimiter. <[tag] [tag]>
    */
-  tag: ['<%','%>'],
+  tag: '%',
   /**
    *  View#evaluate(object) -> String
    *
