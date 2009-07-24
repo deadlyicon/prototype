@@ -231,6 +231,29 @@ Element.Methods = {
   },
 
   /**
+   *  Element#cloak(@element) -> Element
+   *
+   *  Sets `visibility: hidden` on `element`. Returns `element`.
+  **/
+  cloak: function(element) {
+    element = $(element);
+    element.style.visibility = 'hidden';
+    return element;
+  },
+
+  /**
+   *  Element#decloak(@element) -> Element
+   *
+   *  Removes `visibility: hidden` on `element`. Returns `element`.
+  **/
+  decloak: function(element) {
+    element = $(element);
+    element.style.visibility = '';
+    return element;
+  },
+
+
+  /**
    *  Element#hideViaPosition(@element) -> Element
    *
    *  Positions the element far outside of the viewport rather then using display:none
