@@ -147,11 +147,12 @@ Object.extend(Function.prototype, (function() {
    *  Note. The function returns the return value of Function1 or if not returned then 
    *  Function2's return value is returned.
   **/
-  function append(followingMethod){
+  function append(__method2){
     var __method = this;
     return function() {
-      return __method.apply(__method, $A(arguments)) ||
-        (followingMethod || Prototype.emptyFunction).apply(followingMethod, $A(arguments));
+        var __return = __method.apply(this, arguments);
+        __method2.apply(this, arguments);
+        return __return;
     };
   };
 
