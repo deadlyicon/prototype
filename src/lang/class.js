@@ -187,7 +187,7 @@ var Class = (function() {
   function curry(){
     if (!arguments.length) return this;
     return Class.create(this, {
-      initialize: Function.prototype.curry.apply(this.prototype,arguments)
+      initialize: Function.prototype.curry.apply(this.prototype.initialize,arguments)
     });
   }
 
