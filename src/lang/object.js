@@ -30,18 +30,16 @@
   }
   
   /**
-   *  Object.extendUnlessDefined(object) -> Object
+   *  Object.reverseExtend(destination, source) -> Object
    *  - destination (Object): The object to receive the new properties.
    *  - source (Object): The object whose properties will be duplicated.
    *
-   *  Copies properties from the source to the destination object only if 
-   *  destination object has that property. Returns the destination object.
+   *  Copies all properties from the source to the destination object unless
+   *  the destination already contains said properies. Same as reverse_merge
   **/
-  function extendUnlessDefined(destination, source) {
-    for (var property in source){
-      if (!(property in destination))
-        destination[property] = source[property];
-    }
+  function reverseExtend(destination, source) {
+    for (var property in source)
+      (property in destination) || (destination[property] = source[property]);
     return destination;
   }
 
@@ -312,6 +310,9 @@
 
   extend(Object, {
     extend:                extend,
+    merge:                 extend,
+    reverseExtend:         reverseExtend,
+    reverseMerge:          reverseExtend,
     inspect:               inspect,
     toJSON:                toJSON,
     toQueryString:         toQueryString,
