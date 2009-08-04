@@ -432,10 +432,10 @@ Object.extend(String.prototype, (function() {
    *  Treats the string as html, fills an element with it and then
    *  returns that elements child nodes.
   **/
+  var toElementsWrapper = document.createElement('div');
   function toElements(){
-    var parentNode = new Element('div');
-    parentNode.innerHTML = this.toString();
-    return $A(parentNode.childNodes);
+    toElementsWrapper.innerHTML = this.toString();
+    return $A(toElementsWrapper.childNodes);
   }
 
   /**
