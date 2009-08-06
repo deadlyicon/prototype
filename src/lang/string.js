@@ -435,7 +435,7 @@ Object.extend(String.prototype, (function() {
   var toElementsWrapper = document.createElement('div');
   function toElements(){
     toElementsWrapper.innerHTML = this.toString();
-    return $A(toElementsWrapper.childNodes);
+    return $A(toElementsWrapper.childNodes).map(Element.extend);
   }
 
   /**
