@@ -59,7 +59,7 @@ Object.extend(Pathname,(function() {
   **/
   function join(){
     return new this($A(arguments).inject('',function(joined, path){
-      return joined+path;
+      return joined+'/'+path;
     }).gsub(/\/+/,'/'));
   }
 
