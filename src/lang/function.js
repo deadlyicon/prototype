@@ -133,7 +133,7 @@ Object.extend(Function.prototype, (function() {
     try{
       return this.apply(this, arguments);
     }catch(e){
-      function(){ throw e; }.defer();
+      (function(){ throw e; }).defer();
     }
   }
 
