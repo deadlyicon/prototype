@@ -318,7 +318,7 @@ Element.Methods = {
   **/
   remove: function(element) {
     element = $(element);
-    element.parentNode.removeChild(element);
+    element.parentNode && element.parentNode.removeChild(element);
     return element;
   },
 
