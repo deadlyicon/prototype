@@ -60,7 +60,7 @@
    *
    *  Note, all arguments are passed through $A so they must be enumerable
   **/
-  Object.send = function send(object, method, args){
+  function send(object, method, args){
     var a = $A(arguments), object = a.shift(), method = a.shift().toString();
     while (a.length > 1)
       a[a.length -2] = $A(a[a.length -2]).concat($A(a.pop()));
