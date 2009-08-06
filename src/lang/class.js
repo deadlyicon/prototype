@@ -155,9 +155,8 @@ var Class = (function() {
 
         if (ancestor && Object.isFunction(value) && value.argumentNames().first() == "$super") {
           var method = value;
-          console.log('wrapping '+property);
           value = (function(m) {
-            return function() { console.log('running super wrapper for',property); return ancestor[m].apply(this, arguments); };
+            return function() { return ancestor[m].apply(this, arguments); };
           })(property).wrap(method);
 
           value.valueOf = method.valueOf.bind(method);
