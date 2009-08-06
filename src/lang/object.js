@@ -44,6 +44,30 @@
   }
 
   /**
+   *  Object.send(object, method[, arguments[, arguments]]) -> String
+   *  - object (Object): The item to be inspected.
+   *  - method (String): The property to call
+   *  - arguments (Array): The arguments to be passed
+   *
+   *  A wrapper for Function#apply that maintains the object context allowing
+   *  you to explore an array onto a method call more easily
+   *
+   *     // before
+   *     Ajax.Responders.dispatch.apply(Ajax.Responders, ['onSuccess'].concat($(arguments)));
+   *
+   *     // now
+   *     Object.send(Ajax.Responders, 'dispatch', ['onSuccess'], arguments);
+   *
+   *  Note, all arguments are passed through $A so they must be enumerable
+  **/
+  Object.send = function send(object, method, args){
+    var a = $A(arguments), object = a.shift(), method = a.shift().toString();
+    while (a.length > 1)
+      a[a.length -2] = $A(a[a.length -2]).concat($A(a.pop()));
+    return object[method].apply(object, a[0]);
+  }
+
+  /**
    *  Object.inspect(object) -> String
    *  - object (Object): The item to be inspected.
    *
@@ -313,6 +337,7 @@
     merge:                 extend,
     reverseExtend:         reverseExtend,
     reverseMerge:          reverseExtend,
+    send:                  send,
     inspect:               inspect,
     toJSON:                toJSON,
     toQueryString:         toQueryString,
