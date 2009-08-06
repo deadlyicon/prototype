@@ -167,6 +167,7 @@ Object.extend(Function.prototype, (function() {
    *  Function2's return value is returned.
   **/
   function append(__method2){
+    if (typeof __method2 !== "function") return this;
     var __method = this;
     return function() {
         var __return = __method.apply(this, arguments);
