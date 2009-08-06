@@ -119,6 +119,25 @@ Object.extend(Function.prototype, (function() {
   }
 
   /**
+   *  Function#deferErrors(args...) -> Number
+   *  Schedules the function to run as soon as the interpreter is idle.
+   *
+   *  A "deferred" function will not run immediately; rather, it will run as soon
+   *  as the interpreter's call stack is empty.
+   *
+   *  Behaves much like `window.setTimeout` with a delay set to `0`. Returns an
+   *  ID that can be used to clear the timeout with `window.clearTimeout` before
+   *  it runs.
+  **/
+  function deferErrors() {
+    try{
+      return this.apply(this, arguments);
+    }catch(e){
+      function(){ throw e; }.defer();
+    }
+  }
+
+  /**
    *  Function#wrap(wrapperFunction) -> Function
    *  - wrapperFunction (Function): The function to act as a wrapper.
    *
@@ -219,6 +238,7 @@ Object.extend(Function.prototype, (function() {
     bindAsEventListener: bindAsEventListener,
     curry:               curry,
     delay:               delay,
+    deferErrors:         deferErrors,
     defer:               defer,
     wrap:                wrap,
     append:              append,
