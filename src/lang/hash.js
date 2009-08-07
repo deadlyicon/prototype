@@ -250,7 +250,7 @@ var Hash = Class.create(Enumerable, (function() {
    *  Returns a clone of the current hash with only the given keys.
   **/
   function only(keys){
-    return $A(arguments).inject(new Hash, function(only, key){
+    return $A(keys).inject(new Hash, function(only, key){
       only.set(key, this.get(key));
       return only;
     }, this);
