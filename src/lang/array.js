@@ -155,6 +155,17 @@ Array.from = $A;
   }
 
   /**
+   *  Array#rand([index]) -> ?
+   *  - index (Number): the index of the item not to return (optional).
+   *  Returns a random item from the array that is not the item of the given index.
+  **/
+  function rand(index) {
+    var item;
+    while(index == this.indexOf(item = this[Math.floor(Math.random()*this.length)])){};
+    return item;
+  }
+
+  /**
    *  Array#compact() -> Array
    *  Trims the array of `null`, `undefined`, or other "falsy" values.
   **/
@@ -340,6 +351,7 @@ Array.from = $A;
     clear:     clear,
     first:     first,
     last:      last,
+    rand:      rand,
     compact:   compact,
     flatten:   flatten,
     without:   without,
