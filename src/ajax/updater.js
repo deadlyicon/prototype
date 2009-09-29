@@ -1,3 +1,80 @@
+/** section: Ajax
+ *  class Ajax.Updater < Ajax.Request
+ *
+ *  A class that performs an Ajax request and updates a container's contents
+ *  with the contents of the response.
+ *
+ *  `Ajax.Updater` is a subclass of [[Ajax.Request]] built for a common
+ *  use-case.
+ *
+ *  <h5>Example</h5>
+ *
+ *      new Ajax.Updater('items', '/items', {
+ *        parameters: { text: $F('text') }
+ *      });
+ *
+ *  This example will make a request to the URL `/items` (with the given
+ *  parameters); it will then replace the contents of the element with the ID
+ *  of `items` with whatever response it receives.
+ *
+ *  <h5>Callbacks</h5>
+ *
+ *  `Ajax.Updater` supports all the callbacks listed in the [[Ajax section]].
+ *  Note that the `onComplete` callback will be invoked **after** the element
+ *  is updated.
+ *
+ *  <h5>Additional options</h5>
+ *
+ *  `Ajax.Updater` has some options of its own apart from the common options
+ *  described in the [[Ajax section]]:
+ *
+ *  * `evalScripts` ([[Boolean]]; defaults to `false`): Whether `<script>`
+ *    elements in the response text should be evaluated.
+ *  * `insertion` ([[String]]): By default, `Element.update` is used, meaning
+ *    the contents of the response will replace the entire contents of the
+ *    container. You may _instead_ insert the response text without disrupting
+ *    existing contents. The `insertion` option takes one of four strings &mdash;
+ *    `top`, `bottom`, `before`, or `after` &mdash; and _inserts_ the contents of the
+ *    response in the manner described by [[Element#insert]].
+ *
+ *  <h5>More About `evalScripts`</h5>
+ *
+ *  If you use `evalScripts: true`, any _inline_ `<script>` block will be evaluated.
+ *  This **does not** mean it will be evaluated in the global scope; it won't, and that
+ *  has important ramifications for your `var` and `function` statements.  Also note
+ *  that only inline `<script>` blocks are supported; external scripts are ignored.
+ *  See [[String#evalScripts]] for the details.
+ *
+ *  <h5>Single container, or success/failure split?</h5>
+ *
+ *  The examples above all assume you're going to update the same container
+ *  whether your request succeeds or fails. Instead, you may want to update
+ *  _only_ for successful requests, or update a _different container_ on failed
+ *  requests.
+ *
+ *  To achieve this, you can pass an object instead of a DOM element for the
+ *  `container` parameter. This object _must_ have a `success` property whose
+ *  value identifies the container to be updated on successful requests.
+ *
+ *  If you also provide it with a `failure` property, its value will be used as
+ *  the container for failed requests.
+ *
+ *  In the following code, only successful requests get an update:
+ *
+ *      new Ajax.Updater({ success: 'items' }, '/items', {
+ *        parameters: { text: $F('text') },
+ *        insertion: 'bottom'
+ *      });
+ *
+ *  This next example assumes failed requests will deliver an error message as
+ *  response text &mdash; one that should be shown to the user in another area:
+ *
+ *      new Ajax.Updater({ success: 'items', failure: 'notice' }, '/items',
+ *        parameters: { text: $F('text') },
+ *        insertion: 'bottom'
+ *      });
+ *
+**/
 
 Ajax.Updater = Class.create(Ajax.Request, {
   /**

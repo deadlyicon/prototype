@@ -1,5 +1,6 @@
 /** section: Ajax
  * Ajax.Responders
+ *  includes Enumerable
  *
  *  A repository of global listeners notified about every step of
  *  Prototype-based Ajax requests.
@@ -33,7 +34,7 @@
  *        }
  *      });
  *
- *  <h4>Responder callbacks</h4>
+ *  <h5>Responder callbacks</h5>
  *
  *  The callbacks for responders are similar to the callbacks described in
  *  the [[Ajax section]], but take a different signature. They're invoked with
